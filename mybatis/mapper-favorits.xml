@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yq.dao.FavoritsDao">
+  	<!-- 通过会员id查询收藏信息 -->
+    <select id="queryFavoritsByMemberID" parameterType="int" resultType="Favorits">
+       SELECT id,memberID,goodsID FROM favorits WHERE memberID=#{mid}
+       order by id DESC
+    </select>
+    <!-- 通过会员id和商品id查询收藏信息 -->
+     <select id="queryByMemberIDAndGoodsID" resultType="Favorits">
+       SELECT id,memberID,goodsID 
+       FROM favorits 
+       WHERE memberID=#{memberID} AND goodsID=#{goodsID}
+       order by id DESC
+    </select>
+    <!-- 添加收藏 -->
+    <insert id="addFavorits" parameterType="Favorits">
+       insert into favorits (memberID,goodsID) values(#{memberID},#{goodsID})
+    </insert>
+    <!-- 通过会员id和商品id取消收藏 -->
+    <delete id="delFavoritsBygoodsID" >
+    	delete from favorits
+    	where memberID=#{memberID} AND goodsID=#{goodsID}
+    </delete>
+</mapper>

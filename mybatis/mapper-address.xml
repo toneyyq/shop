@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yq.dao.MemberAddressBookDao">
+  	<!-- 通过memberID查询address -->
+    <select id="queryMemberAddressBooksByMemberID" parameterType="int" resultType="MemberAddressBook">
+      	SELECT id,memberID,memberName,memberAddress,provinceCode,cityCode,areaCode,tatus,memberTelephone
+		FROM memberAddressBook WHERE memberID=#{mid}
+    </select>
+    <!-- 通过id查询address -->
+    <select id="queryMemberAddressBookByID" parameterType="int" resultType="MemberAddressBook">
+      	SELECT id,memberID,memberName,memberAddress,provinceCode,cityCode,areaCode,tatus,memberTelephone
+		FROM memberAddressBook WHERE id=#{id}
+    </select>
+    <!-- 添加地址 -->
+    <insert id="addMemberAddressBook" parameterType="MemberAddressBook">
+       insert into memberAddressBook (memberID,memberName,memberAddress,provinceCode,cityCode,areaCode,tatus,memberTelephone) 
+       values(#{memberID},#{memberName},#{memberAddress},#{provinceCode},#{cityCode},#{areaCode},#{tatus},#{memberTelephone})
+    </insert>
+    <!-- 清除数据库之前该会员的默认地址 -->
+    <update id="delAddressDefault" parameterType="int">
+    	update memberAddressBook 
+    	set tatus = '0'
+		where memberID = #{mid}    
+    </update>
+    <!-- 将id 的地址设置为默认地址 -->
+    <update id="updateAddressDefault" parameterType="int">
+    	update memberAddressBook
+    	set tatus = '1'
+    	where id = #{id}
+    </update>
+    
+    <delete id="delMemberAddressBook" parameterType="int" >
+    	DELETE FROM memberAddressBook 
+    	WHERE id=#{id}
+    </delete>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yq.dao.CartGoodsDao">
+  
+    <!-- 通过memberID 查询购物车商品 【购物车功能】 -->
+    <select id="queryCartGoodsByMemberId" parameterType="int" resultType="CartGoods">
+       SELECT cartID ,goodsID ,memberID,goodsCount 
+		FROM cartgoods
+		where memberID=#{memberID}
+		order by cartID DESC
+    </select>
+    <!-- 通过memberID和商品id查询购物车商品 -->
+    <select id="queryBymemberIDAndgoodsID" resultType="CartGoods">
+       SELECT cartID ,goodsID ,memberID,goodsCount 
+		FROM cartgoods
+		where goodsID=#{goodsID} AND memberID=#{memberID}
+		order by cartID DESC
+    </select>
+    <!-- 查询购物车商品数量 -->
+    <select id="getCount" parameterType="int" resultType="int">
+    	select count(1) from cartgoods
+    	where memberID=#{mid}
+    </select>
+   <!-- 添加购物车商品 -->
+    <insert id="addCartGoods" parameterType="CartGoods">
+       insert into cartgoods (goodsID ,memberID,goodsCount) 
+       values(#{goodsID},#{memberID},#{goodsCount})
+    </insert>
+    <!-- 修改购物车商品 -->
+    <update id="updateCartGoods" parameterType="CartGoods">
+    	UPDATE cartgoods 
+    	<set>
+    		<if test="goodsID != null">goodsID=#{goodsID},</if>
+    		<if test="memberID != null">memberID=#{memberID},</if>
+    		<if test="goodsCount != null">goodsCount=#{goodsCount},</if>
+    	</set>
+    	where cartID=#{cartID}
+    
+    </update>
+    <!-- 通过购物车商品id删除购物车商品 -->
+    <delete id="deleteCartGoodsByCartID" parameterType="int">
+    	delete from cartgoods 
+    	where cartID= #{cartID}
+    </delete>
+   	<!-- 通过会员id和商品id删除购物车商品 -->
+    <delete id="deleteCartGoodsBymemberIDAndGoodsID" >
+    	delete from cartgoods 
+    	where memberID= #{memberID} AND goodsID=#{goodsID}
+    </delete>
+    
+</mapper>

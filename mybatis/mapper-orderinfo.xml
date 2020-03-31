@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yq.dao.OrderInfoDao">
+
+	<!-- 查询所有订单明细 -->
+	<select id="queryAllOrderInfo" resultType="OrderInfo">
+		SELECT orderID ,memberID ,goodsID, goodsCount, id ,orderAmount ,orderPay
+		,orderInvoice, orderCarry ,orderRemark, orderStatus ,createDate
+		FROM orderinfo
+		ORDER BY orderID DESC 
+	</select>
+	<!-- 获取最新添加的订单id -->
+	<select id="getNewDataId" parameterType="int" resultType="int">
+		select max(orderID) from orderinfo where memberID=#{mid}
+	</select>
+	<!-- 通过订单orderid 查询订单明细  -->
+	<select id="queryOrderInfoByOrderID" parameterType="int" resultType="OrderInfo">
+		SELECT orderID ,memberID ,goodsID, goodsCount, id ,orderAmount ,orderPay
+		,orderInvoice, orderCarry ,orderRemark, orderStatus ,createDate
+		FROM orderinfo
+		where orderID=#{orderID}
+	</select>
+	<!-- 通过会员id查询订单列表 -->
+	<select id="queryOrderInfoByMemberID" parameterType="int" resultType="OrderInfo">
+		SELECT orderID ,memberID ,goodsID, goodsCount, id ,orderAmount ,orderPay
+		,orderInvoice, orderCarry ,orderRemark, orderStatus ,createDate
+		FROM orderinfo
+		WHERE memberID = #{memberID}
+		ORDER BY orderID DESC 
+		
+	</select>
+
+	<!-- 通过订单orderid 和orderstatus状态查询订单明细 -->
+	<select id="queryOrderInfoByIdAndStatus" resultType="OrderInfo">
+		SELECT orderID ,memberID ,goodsID, goodsCount, id ,orderAmount
+		,orderPay ,orderInvoice, orderCarry ,orderRemark, orderStatus
+		,createDate
+		FROM orderinfo
+		<where>
+			<if test="orderID != null and orderID != '' and orderID != 0">
+				orderID like concat('%',#{orderID},'%')
+			</if>
+			<if test="orderStatus != null and orderStatus != 'null' and orderStatus != ''">
+				AND orderStatus=#{orderStatus}
+			</if>
+		</where>
+		ORDER BY orderID DESC 
+	</select>
+	<!-- 修改订单 -->
+	<update id="updateOrderInfo" parameterType="OrderInfo">
+		update orderinfo 
+		<set>
+			<if test="memberID != null"> memberID = #{memberID},</if>
+			<if test="goodsID != null"> goodsID = #{goodsID},</if>
+			<if test="goodsCount != null"> goodsCount = #{goodsCount},</if>
+			<if test="id != null"> id = #{id},</if>
+			<if test="orderAmount != null"> orderAmount = #{orderAmount},</if>
+			<if test="orderPay != null"> orderPay = #{orderPay}</if>
+			<if test="orderInvoice != null"> orderInvoice = #{orderInvoice},</if>
+			<if test="orderCarry != null">orderCarry = #{orderCarry},</if>
+			<if test="orderRemark != null and orderRemark != ''"> orderRemark = #{orderRemark},</if>
+			<if test="orderStatus != null"> orderStatus = #{orderStatus},</if>
+			<if test="createDate != null"> createDate = #{createDate},</if>
+		</set>
+		where orderID = #{orderID}
+	</update>
+	<!-- 添加订单 -->
+	<insert id="addOrderInfo" parameterType="OrderInfo">
+		INSERT INTO orderinfo(memberID ,goodsID, goodsCount, id ,orderAmount ,orderPay
+		,orderInvoice, orderCarry ,orderRemark, orderStatus ,createDate)
+		values(#{memberID},#{goodsID},#{goodsCount},#{id},#{orderAmount},#{orderPay},#{orderInvoice},#{orderCarry},#{orderRemark},#{orderStatus},#{createDate})
+	</insert>
+	<!-- 删除订单 -->
+	<delete id="delOrderInfo" parameterType="int">
+		delete from orderinfo
+		where orderID = #{orderID}
+	
+	</delete>
+</mapper>

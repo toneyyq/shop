@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yq.dao.PlacardDao">
+  	<!-- 查询所有公告 -->
+    <select id="queryAllPlacard" resultType="Placard">
+		SELECT placardID,placardTitle,placardContent,issueDate,expireDate FROM placard  
+		ORDER BY placardID DESC   
+	</select>
+	<!-- 通过id 查询公告 -->
+	<select id="queryPlacardById" parameterType="int" resultType="Placard">
+		SELECT placardID,placardTitle,placardContent,issueDate,expireDate FROM placard 
+		where placardID=#{id}   
+	</select>
+    <!-- 添加公告 -->
+    <insert id="addPlacard" parameterType="Placard">
+       insert into placard(placardTitle,placardContent,issueDate,expireDate) 
+       values(#{placardTitle},#{placardContent},#{issueDate},#{expireDate})
+    </insert>
+    
+    <update id="updatePlacard" parameterType="Placard">
+    	UPDATE placard 
+    	<set>
+    	<if test="placardTitle != null">
+    		placardTitle=#{placardTitle},
+    	</if>
+    	<if test="placardContent != null">
+    		placardContent=#{placardContent},
+    	</if>
+    	<if test="issueDate != null">
+    		issueDate=#{issueDate},
+    	</if>
+    	<if test="expireDate != null">
+    		expireDate=#{expireDate} 
+    	</if>
+    	</set>
+    	WHERE placardID=#{placardID}
+    
+    </update>
+    <delete id="deletePlacard" parameterType="int">
+    	delete from placard where placardID=#{id}
+    
+    </delete>
+</mapper>

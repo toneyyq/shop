@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yq.dao.GoodsTypeDao">
+  	<!-- 通过parentid查询商品类别 -->
+	<select id="queryGoodsTypeByParentID" parameterType="int"  resultType="GoodsType">
+		SELECT typeID,typeName,typeDesc,isLeaf,parentID FROM goodsType WHERE parentID= #{parentID}
+	</select>
+	<!-- 通过id查询商品类别 -->
+	<select id="queryGoodsTypeBygoodsTypeID" parameterType="int"  resultType="GoodsType">
+		SELECT typeID,typeName,typeDesc,isLeaf,parentID FROM goodsType WHERE typeID= #{id}
+	</select>
+	<!-- 通过级别查询类目 -->
+	<select id="queryGoodsTypeByIsLeaf" parameterType="String"  resultType="GoodsType">
+		SELECT typeID,typeName,typeDesc,isLeaf,parentID FROM goodsType WHERE isLeaf= #{isLeaf}
+	</select>
+	<!-- 通过typeid删除类别 -->
+	<delete id="delGoodsType" parameterType="int"  >
+		DELETE FROM goodsType WHERE typeID=#{typeID}
+	</delete>
+	<!-- 添加类别 -->
+    <insert id="addGoodsType" parameterType="GoodsType">
+       INSERT INTO goodsType(typeName,typeDesc,isLeaf,parentID) 
+       VALUES(#{typeName},#{typeDesc},#{isLeaf},#{parentID})
+    </insert>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yq.dao.ProvinceDao">
+  	<!-- 查询所有省市 -->
+    <select id="queryAllProvince"  resultType="Province">
+      	SELECT provinceCode,province
+		FROM province
+    </select>
+    <!-- 通过省市代码查询省市 -->
+     <select id="queryProvinceByProvinceCode" parameterType="String"  resultType="Province">
+      	SELECT provinceCode,province
+		FROM province
+		WHERE provinceCode = #{provinceCode}
+    </select>
+    
+    <!-- <insert id="addUser" parameterType="User">
+       insert into user (name,password,age) values(#{name},#{password},#{age})
+    </insert> -->
+</mapper>

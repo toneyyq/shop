@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yq.dao.GoodsDao">
+	<!-- 查询所有商品 -->
+	<select id="queryAllGoods" resultType="Goods">
+		select
+		goodsID,goodsName,goodsIntroduce,goodsNormalPrice,goodsMemberPrice,typeCode,goodsNumber,isSale,isValid,goodsPicture
+		from goods
+		order by goodsID DESC
+	</select>
+	<!-- 查询最新商品 输入数量 -->
+	<select id="queryNewGoods" parameterType="int" resultType="Goods">
+		select
+		goodsID,goodsName,goodsIntroduce,goodsNormalPrice,goodsMemberPrice,typeCode,goodsNumber,isSale,isValid,goodsPicture
+		from goods 
+		ORDER BY goodsID DESC 
+		LIMIT 0,#{count}
+	</select>
+	<!-- 通过类型查询商品 -->
+	<select id="queryGoodsByTypeCode" parameterType="String" resultType="Goods">
+		select
+		goodsID,goodsName,goodsIntroduce,goodsNormalPrice,goodsMemberPrice,typeCode,goodsNumber,isSale,isValid,goodsPicture
+		from goods
+		where typeCode=#{typeCode}
+		ORDER BY goodsID DESC 
+	</select>
+	<!-- 添加商品 -->
+	<insert id="addGoods" parameterType="Goods">
+		insert into
+		goods(goodsName,goodsIntroduce,goodsNormalPrice,goodsMemberPrice,typeCode,goodsNumber,isSale,isValid,goodsPicture)
+		values(#{goodsName},#{goodsIntroduce},#{goodsNormalPrice},#{goodsMemberPrice},#{typeCode},#{goodsNumber},#{isSale},#{isValid},#{goodsPicture})
+	</insert>
+	<!-- 通过goodsID 查询商品 -->
+	<select id="queryGoodsByGoodsID" parameterType="int"
+		resultType="Goods">
+		select
+		goodsID,goodsName,goodsIntroduce,goodsNormalPrice,goodsMemberPrice,typeCode,goodsNumber,isSale,isValid,goodsPicture
+		from goods
+		where goodsID=#{goodID}
+	</select>
+	<!-- 修改商品(商品当前状态另外修改) -->
+	<update id="updateGoods" parameterType="Goods">
+		UPDATE goods SET
+		goodsName=#{goodsName},goodsIntroduce=#{goodsIntroduce},goodsNormalPrice=#{goodsNormalPrice},goodsMemberPrice=#{goodsMemberPrice},
+		typeCode=#{typeCode},goodsNumber=#{goodsNumber},isSale=#{isSale}
+		<if test="goodsPicture != null">,goodsPicture=#{goodsPicture}</if>
+		WHERE goodsID=#{goodsID}
+	</update>
+	<!-- 修改商品状态 -->
+	<update id="updateGoodsValid">
+		UPDATE goods SET isValid= #{isValid} WHERE
+		goodsID=#{goodsID}
+
+	</update>
+	<!-- 通过typeCode和goodsName查询对应商品集合，对名字进行模糊查询 -->
+	<select id="queryGoodsByTypeCodeAndGoodsName" resultType="Goods">
+		select
+		goodsID,goodsName,goodsIntroduce,goodsNormalPrice,goodsMemberPrice,typeCode,goodsNumber,isSale,isValid,goodsPicture
+		from goods 
+		<where>
+			<if test="type != null ">
+				 typeCode=#{type} 
+			</if>
+			<if test="name != null ">
+				AND goodsName LIKE concat('%',#{name},'%')
+			</if>
+			
+		</where>
+		ORDER BY goodsID DESC 
+	</select>
+	
+</mapper>

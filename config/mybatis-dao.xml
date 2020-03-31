@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+			http://www.springframework.org/schema/beans/spring-beans.xsd 
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context.xsd 
+			http://www.springframework.org/schema/aop 
+			http://www.springframework.org/schema/aop/spring-aop.xsd 
+			http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx.xsd ">
+    
+    <!--扫描 测试service层 -->
+  	<context:component-scan base-package="com.yq.service.impl"></context:component-scan> 
+    <!-- 读取db.properties配置文件 -->
+    <context:property-placeholder location="classpath:db.properties"/>
+    
+    <!-- 数据源  c3p0连接池-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"><!-- c3p0数据源 -->
+        <property name="driverClass" value="${driver}"></property>
+        <property name="jdbcUrl" value="${url}"></property>
+        <property name="user" value="${user}"></property>
+        <property name="password" value="${password}"></property>
+        <property name="acquireIncrement" value="${acquireIncrement}"></property>
+        <property name="initialPoolSize" value="${initialPoolSize}"></property>
+        <property name="minPoolSize" value="${minPoolSize}"></property>
+        <property name="maxPoolSize" value="${maxPoolSize}"></property>
+    
+    </bean>
+    <!-- spring管理创建SqlSessionFactory -->
+     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+         <property name="dataSource" ref="dataSource"></property>
+         <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+         <property name="mapperLocations" >
+         	<list>
+               <value>classpath:mapper-*.xml</value>
+         	</list> 
+         </property>
+     </bean>
+    
+    <!-- 扫描器,扫描包下的接口 dao层 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+      <property name="basePackage" value="com.yq.dao"></property>
+      <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    
+    </bean>
+    
+    <!-- 事务管理器 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+       <property name="dataSource" ref="dataSource"></property>
+    </bean>
+   
+   <!-- 事务的传播特性 -->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+       <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="del*" propagation="REQUIRED"/>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="*" read-only="true"/>
+       </tx:attributes>
+    
+    </tx:advice>
+   <!-- 将service中所有方法纳入事务管理 -->
+   <aop:config>
+      <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.yq.service.*.*(..))"/>
+   
+   </aop:config>
+   
+   
+</beans>
