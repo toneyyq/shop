@@ -15,7 +15,7 @@
 
 #### 使用说明
 
-1.  xxxx
+1.  数据库参照 https://gitee.com/toneyyq/Database 中的 mall.sql 进行创建。
 2.  xxxx
 3.  xxxx
 
