@@ -15,7 +15,4 @@
 		WHERE provinceCode = #{provinceCode}
     </select>
     
-    <!-- <insert id="addUser" parameterType="User">
-       insert into user (name,password,age) values(#{name},#{password},#{age})
-    </insert> -->
 </mapper>
